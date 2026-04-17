@@ -5,7 +5,9 @@
     "metriche": "Metriche",
     "tavoli": "Tavoli",
     "kds": "Cucina",
-    "menu": "Menu"
+    "menu": "Menu",
+    "empleados": "Dipendenti",
+    "fichajes": "Presenze"
   },
   "inventario": {
     "titolo": "Gestione Inventario",
@@ -171,6 +173,37 @@
     "editar_mesa": "Modifica tavolo",
     "numero_mesa": "Numero tavolo",
     "guardar_posicion": "Posizione salvata"
+  },
+  "empleados": {
+    "titolo": "Gestione Dipendenti",
+    "sottotitolo": "Crea, modifica e gestisci il personale",
+    "aggiungi": "Aggiungi dipendente",
+    "nombre": "Nome completo",
+    "pin": "PIN (4 cifre)",
+    "pin_placeholder": "Scegli il tuo PIN",
+    "rol": "Ruolo",
+    "roles": {
+      "camarero": "Cameriere",
+      "cocinero": "Cuoco",
+      "responsable_sala": "Responsabile sala"
+    },
+    "activo": "Attivo",
+    "en_turno": "In turno",
+    "fuera_turno": "Fuori turno",
+    "fichaje_entrada": "Entrata",
+    "fichaje_salida": "Uscita",
+    "ultimo_fichaje": "Ultimo accesso",
+    "modal_nuevo": "Nuovo dipendente",
+    "modal_editar": "Modifica dipendente",
+    "sin_empleados": "Nessun dipendente registrato",
+    "confirmar_eliminar": "Eliminare questo dipendente?",
+    "fichar": "Timbra",
+    "fichajes_titolo": "Registro Presenze",
+    "fichajes_sottotitolo": "Storico entrate e uscite del personale",
+    "empleado": "Dipendente",
+    "tipo": "Tipo",
+    "fecha": "Data e ora",
+    "sin_fichajes": "Nessuna presenza registrata oggi"
   },
   "comun": {
     "guardar": "Salva",

@@ -5,7 +5,9 @@
     "metriche": "Metrics",
     "tavoli": "Tables",
     "kds": "Kitchen",
-    "menu": "Menu"
+    "menu": "Menu",
+    "empleados": "Employees",
+    "fichajes": "Timesheets"
   },
   "inventario": {
     "titolo": "Inventory Management",
@@ -171,6 +173,37 @@
     "editar_mesa": "Edit table",
     "numero_mesa": "Table number",
     "guardar_posicion": "Position saved"
+  },
+  "empleados": {
+    "titolo": "Employee Management",
+    "sottotitolo": "Create, edit and manage staff",
+    "aggiungi": "Add employee",
+    "nombre": "Full name",
+    "pin": "PIN (4 digits)",
+    "pin_placeholder": "Choose your PIN",
+    "rol": "Role",
+    "roles": {
+      "camarero": "Waiter",
+      "cocinero": "Cook",
+      "responsable_sala": "Floor manager"
+    },
+    "activo": "Active",
+    "en_turno": "On shift",
+    "fuera_turno": "Off shift",
+    "fichaje_entrada": "Clock in",
+    "fichaje_salida": "Clock out",
+    "ultimo_fichaje": "Last access",
+    "modal_nuevo": "New employee",
+    "modal_editar": "Edit employee",
+    "sin_empleados": "No employees registered",
+    "confirmar_eliminar": "Delete this employee?",
+    "fichar": "Clock",
+    "fichajes_titolo": "Timesheet Registry",
+    "fichajes_sottotitolo": "Staff clock-in/out history",
+    "empleado": "Employee",
+    "tipo": "Type",
+    "fecha": "Date & time",
+    "sin_fichajes": "No entries recorded today"
   },
   "comun": {
     "guardar": "Save",

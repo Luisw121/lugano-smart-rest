@@ -5,7 +5,9 @@
     "metriche": "Métricas",
     "tavoli": "Mesas",
     "kds": "Cocina",
-    "menu": "Carta"
+    "menu": "Carta",
+    "empleados": "Empleados",
+    "fichajes": "Fichajes"
   },
   "inventario": {
     "titolo": "Gestión de Inventario",
@@ -171,6 +173,37 @@
     "editar_mesa": "Editar mesa",
     "numero_mesa": "Número de mesa",
     "guardar_posicion": "Posición guardada"
+  },
+  "empleados": {
+    "titolo": "Gestión de Empleados",
+    "sottotitolo": "Crea, edita y gestiona el personal",
+    "aggiungi": "Añadir empleado",
+    "nombre": "Nombre completo",
+    "pin": "PIN (4 dígitos)",
+    "pin_placeholder": "Elige tu PIN",
+    "rol": "Rol",
+    "roles": {
+      "camarero": "Camarero",
+      "cocinero": "Cocinero",
+      "responsable_sala": "Responsable de sala"
+    },
+    "activo": "Activo",
+    "en_turno": "En turno",
+    "fuera_turno": "Fuera de turno",
+    "fichaje_entrada": "Entrada",
+    "fichaje_salida": "Salida",
+    "ultimo_fichaje": "Último acceso",
+    "modal_nuevo": "Nuevo empleado",
+    "modal_editar": "Editar empleado",
+    "sin_empleados": "No hay empleados registrados",
+    "confirmar_eliminar": "¿Eliminar este empleado?",
+    "fichar": "Fichar",
+    "fichajes_titolo": "Registro de Fichajes",
+    "fichajes_sottotitolo": "Historial de entradas y salidas del personal",
+    "empleado": "Empleado",
+    "tipo": "Tipo",
+    "fecha": "Fecha y hora",
+    "sin_fichajes": "Ningún fichaje registrado hoy"
   },
   "comun": {
     "guardar": "Guardar",

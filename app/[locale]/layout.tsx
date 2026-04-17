@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { notFound } from 'next/navigation'
 import { locales, type Locale } from '@/lib/i18n/config'
+import { ThemeProvider } from '@/components/ui/ThemeProvider'
 import '../globals.css'
 
 const inter = Inter({
@@ -32,8 +33,8 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} className={inter.variable}>
-      <body className="bg-gray-50 text-gray-900 antialiased">
-        {children}
+      <body className="bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 antialiased">
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   )

@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { UtensilsCrossed, LayoutGrid, ChefHat } from 'lucide-react'
 import { getDictionary, type Locale } from '@/lib/i18n/config'
+import ThemeToggle from '@/components/ui/ThemeToggle'
 import LanguageSelector from '@/components/ui/LanguageSelector'
 
 export default async function SalaLayout({
@@ -14,12 +15,12 @@ export default async function SalaLayout({
   const dict = await getDictionary(locale as Locale)
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
+    <div className="flex flex-col h-screen bg-gray-50 dark:bg-gray-950">
       {/* Top bar */}
-      <header className="h-12 bg-white border-b border-gray-100 flex items-center px-5 gap-6 flex-shrink-0">
+      <header className="h-12 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 flex items-center px-5 gap-6 flex-shrink-0">
         <div className="flex items-center gap-2">
-          <UtensilsCrossed className="w-4 h-4 text-gray-900" strokeWidth={1.5} />
-          <span className="font-semibold text-sm text-gray-900 tracking-tight">
+          <UtensilsCrossed className="w-4 h-4 text-gray-900 dark:text-white" strokeWidth={1.5} />
+          <span className="font-semibold text-sm text-gray-900 dark:text-white tracking-tight">
             Lugano Smart Rest
           </span>
         </div>
@@ -28,7 +29,7 @@ export default async function SalaLayout({
           <Link
             href={`/${locale}/mesas`}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium
-                       text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+                       text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white transition-colors"
           >
             <LayoutGrid className="w-3.5 h-3.5" strokeWidth={1.5} />
             {dict.nav.tavoli}
@@ -36,15 +37,18 @@ export default async function SalaLayout({
           <Link
             href={`/${locale}/kds`}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium
-                       text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+                       text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white transition-colors"
           >
             <ChefHat className="w-3.5 h-3.5" strokeWidth={1.5} />
             {dict.nav.kds}
           </Link>
         </nav>
 
-        <div className="ml-auto w-44">
-          <LanguageSelector currentLocale={locale as Locale} />
+        <div className="ml-auto flex items-center gap-2">
+          <ThemeToggle />
+          <div className="w-44">
+            <LanguageSelector currentLocale={locale as Locale} />
+          </div>
         </div>
       </header>
 

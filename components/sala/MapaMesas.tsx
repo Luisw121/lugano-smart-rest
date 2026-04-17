@@ -161,10 +161,10 @@ export default function MapaMesas({
       {/* Canvas principal */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Toolbar */}
-        <div className="flex items-center justify-between px-5 py-3 border-b border-gray-100 bg-white">
+        <div className="flex items-center justify-between px-5 py-3 border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900">
           <div className="flex items-center gap-3">
             <LayoutGrid className="w-4 h-4 text-gray-400" strokeWidth={1.5} />
-            <h1 className="text-sm font-semibold text-gray-900">
+            <h1 className="text-sm font-semibold text-gray-900 dark:text-white">
               {t.titolo as string}
             </h1>
             <div className="flex items-center gap-3 ml-4">
@@ -173,7 +173,7 @@ export default function MapaMesas({
                 { key: 'ocupada',  dot: 'bg-amber-400' },
                 { key: 'reservada',dot: 'bg-blue-400' },
               ].map(({ key, dot }) => (
-                <span key={key} className="flex items-center gap-1.5 text-xs text-gray-400">
+                <span key={key} className="flex items-center gap-1.5 text-xs text-gray-400 dark:text-gray-500">
                   <span className={`w-2 h-2 rounded-full ${dot}`} />
                   {(t.estado as Record<string, string>)[key]}
                 </span>
@@ -185,8 +185,8 @@ export default function MapaMesas({
             {editMode && (
               <button
                 onClick={agregarMesa}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-900 text-white text-xs
-                           font-medium rounded-lg hover:bg-gray-800 transition-colors"
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs
+                           font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors"
               >
                 <Plus className="w-3.5 h-3.5" strokeWidth={2} />
                 {t.agregar_mesa as string}
@@ -197,8 +197,8 @@ export default function MapaMesas({
               className={[
                 'flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors',
                 editMode
-                  ? 'border-amber-300 bg-amber-50 text-amber-700'
-                  : 'border-gray-200 text-gray-600 hover:bg-gray-50',
+                  ? 'border-amber-300 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400'
+                  : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800',
               ].join(' ')}
             >
               {editMode
@@ -212,7 +212,7 @@ export default function MapaMesas({
         {/* Mapa */}
         <div
           ref={canvasRef}
-          className="relative flex-1 m-4 rounded-2xl border-2 border-dashed border-gray-200 bg-white overflow-hidden"
+          className="relative flex-1 m-4 rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 overflow-hidden"
           style={{
             backgroundImage: 'radial-gradient(circle, #e5e7eb 1px, transparent 1px)',
             backgroundSize: '32px 32px',
@@ -238,8 +238,8 @@ export default function MapaMesas({
 
           {mesas.length === 0 && (
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-center">
-              <LayoutGrid className="w-10 h-10 text-gray-200" strokeWidth={1} />
-              <p className="text-sm text-gray-400">
+              <LayoutGrid className="w-10 h-10 text-gray-200 dark:text-gray-700" strokeWidth={1} />
+              <p className="text-sm text-gray-400 dark:text-gray-500">
                 Abilita la modalità modifica per aggiungere tavoli
               </p>
             </div>
@@ -249,7 +249,7 @@ export default function MapaMesas({
         {/* Zona labels */}
         <div className="px-5 pb-3 flex items-center gap-3">
           {zonasActivas.map((zona) => (
-            <span key={zona} className="text-xs text-gray-400 bg-white border border-gray-100 px-2 py-1 rounded-lg">
+            <span key={zona} className="text-xs text-gray-400 dark:text-gray-500 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 px-2 py-1 rounded-lg">
               {(t.zonas as Record<string, string>)[zona] ?? zona}
               {' · '}
               {mesas.filter((m) => m.zona === zona).length} tavoli
