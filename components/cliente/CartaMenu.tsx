@@ -30,6 +30,8 @@ interface Props {
   locale: Locale
 }
 
+const HERO_BG = 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1200&q=80'
+
 export default function CartaMenu({ categorias, productos: prodIniciales, alergenos, dict, locale }: Props) {
   const t = dict.carta
 
@@ -43,58 +45,43 @@ export default function CartaMenu({ categorias, productos: prodIniciales, alerge
   const supabase = createClient()
   const seccionRefs = useRef<Map<string, HTMLElement>>(new Map())
 
-  // ── Realtime: sincronizar disponibilidad ──────────────────
   useEffect(() => {
     const channel = supabase
       .channel('carta-realtime')
-      .on(
-        'postgres_changes',
-        { event: 'UPDATE', schema: 'public', table: 'productos' },
-        (payload) => {
-          setProductos((prev) =>
-            prev.map((p) =>
-              p.id === payload.new.id
-                ? { ...p, disponible: payload.new.disponible as boolean }
-                : p
-            )
-          )
-        }
-      )
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'productos' }, (payload) => {
+        setProductos((prev) =>
+          prev.map((p) => p.id === payload.new.id ? { ...p, disponible: payload.new.disponible as boolean } : p)
+        )
+      })
       .subscribe()
     return () => { supabase.removeChannel(channel) }
   }, [supabase])
 
-  // ── Scroll top detector ───────────────────────────────────
   useEffect(() => {
     const onScroll = () => setShowScrollTop(window.scrollY > 400)
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  // ── Toggle alérgeno activo ────────────────────────────────
-  function toggleAlergeno(id: string) {
+  const toggleAlergeno = useCallback((id: string) => {
     setAlergenosActivos((prev) => {
       const next = new Set(prev)
       next.has(id) ? next.delete(id) : next.add(id)
       return next
     })
-  }
+  }, [])
 
-  // ── Nombre localizado ─────────────────────────────────────
   function nombre(trads: Trad[], fallback = '—') {
     return trads.find((t) => t.idioma_id === locale)?.nombre ?? trads[0]?.nombre ?? fallback
   }
 
-  // ── Filtrado ──────────────────────────────────────────────
   const productosFiltrados = useMemo(() => {
     const q = busqueda.toLowerCase()
     return productos.filter((p) => {
-      // Excluir si contiene un alérgeno activo (filtrado)
       if (alergenosActivos.size > 0) {
         const ids = p.alergenos.map((a) => a.alergeno.id)
         if (ids.some((id) => alergenosActivos.has(id))) return false
       }
-      // Búsqueda por nombre
       if (q) {
         const trad = p.traducciones.find((t) => t.idioma_id === locale) ?? p.traducciones[0]
         return trad?.nombre.toLowerCase().includes(q) || trad?.descripcion?.toLowerCase().includes(q)
@@ -103,11 +90,7 @@ export default function CartaMenu({ categorias, productos: prodIniciales, alerge
     })
   }, [productos, alergenosActivos, busqueda, locale])
 
-  // ── Agrupar por categoría ─────────────────────────────────
-  const categoriasSorted = useMemo(
-    () => [...categorias].sort((a, b) => a.orden - b.orden),
-    [categorias]
-  )
+  const categoriasSorted = useMemo(() => [...categorias].sort((a, b) => a.orden - b.orden), [categorias])
 
   const porCategoria = useMemo(() => {
     return categoriasSorted.map((cat) => ({
@@ -116,23 +99,41 @@ export default function CartaMenu({ categorias, productos: prodIniciales, alerge
     })).filter(({ items }) => items.length > 0)
   }, [categoriasSorted, productosFiltrados])
 
-  // ── Scroll a sección ──────────────────────────────────────
   function scrollACategoria(catId: string) {
     setCategoriaActiva(catId)
     const el = seccionRefs.current.get(catId)
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
+  // Emoji per categoria slug
+  const catEmoji: Record<string, string> = {
+    antipasti: '🫒', primi: '🍝', secondi: '🥩', contorni: '🥗', dolci: '🍮', bevande: '🍷',
+  }
+
   return (
-    <div className="pb-16">
-      {/* Hero */}
-      <div className="px-4 pt-8 pb-6 text-center">
-        <h1 className="text-3xl font-black text-stone-900 tracking-tight">{t.bienvenida}</h1>
-        <p className="text-sm text-stone-500 mt-1">{t.subtitulo}</p>
+    <div className="pb-20">
+
+      {/* ── Hero ───────────────────────────────────────────── */}
+      <div className="relative h-72 overflow-hidden">
+        <img
+          src={HERO_BG}
+          alt="Lugano Smart Rest"
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/40 to-black/70" />
+        <div className="absolute inset-0 flex flex-col items-center justify-end pb-8 text-center px-4">
+          <p className="text-white/70 text-xs uppercase tracking-[0.3em] mb-2 font-medium">
+            Lugano · Svizzera
+          </p>
+          <h1 className="text-white text-3xl font-black tracking-tight leading-none">
+            Lugano Smart Rest
+          </h1>
+          <p className="text-white/80 text-sm mt-2">{t.subtitulo}</p>
+        </div>
       </div>
 
-      {/* Buscador */}
-      <div className="px-4 mb-4">
+      {/* ── Buscador + Filtros ─────────────────────────────── */}
+      <div className="px-4 pt-5 pb-2 space-y-3">
         <div className="relative">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" strokeWidth={1.5} />
           <input
@@ -145,18 +146,13 @@ export default function CartaMenu({ categorias, productos: prodIniciales, alerge
                        focus:border-stone-300 shadow-sm transition-all"
           />
           {busqueda && (
-            <button
-              onClick={() => setBusqueda('')}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700"
-            >
+            <button onClick={() => setBusqueda('')} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700">
               <X className="w-4 h-4" strokeWidth={1.5} />
             </button>
           )}
         </div>
-      </div>
 
-      {/* Botón filtros alérgenos */}
-      <div className="px-4 mb-4">
+        {/* Filtros alérgenos */}
         <button
           onClick={() => setMostrarFiltros((v) => !v)}
           className={[
@@ -170,33 +166,26 @@ export default function CartaMenu({ categorias, productos: prodIniciales, alerge
             <SlidersHorizontal className="w-4 h-4" strokeWidth={1.5} />
             <span>{t.alergenos_titulo}</span>
             {alergenosActivos.size > 0 && (
-              <span className="bg-white/20 px-2 py-0.5 rounded-full text-xs font-bold">
-                {alergenosActivos.size}
-              </span>
+              <span className="bg-white/20 px-2 py-0.5 rounded-full text-xs font-bold">{alergenosActivos.size}</span>
             )}
           </div>
           {mostrarFiltros && <X className="w-4 h-4" strokeWidth={1.5} />}
         </button>
 
         {mostrarFiltros && (
-          <div className="mt-3 p-4 bg-white border border-stone-100 rounded-2xl shadow-sm space-y-3">
+          <div className="p-4 bg-white border border-stone-100 rounded-2xl shadow-sm space-y-3">
             <p className="text-xs text-stone-500 leading-relaxed">{t.alergenos_info}</p>
             <div className="flex flex-wrap gap-2">
               {alergenos.map((al) => {
                 const activo = alergenosActivos.has(al.id)
-                const nom =
-                  al.traducciones.find((tr) => tr.idioma_id === locale)?.nombre ??
-                  al.traducciones[0]?.nombre ??
-                  al.slug
+                const nom = al.traducciones.find((tr) => tr.idioma_id === locale)?.nombre ?? al.traducciones[0]?.nombre ?? al.slug
                 return (
                   <button
                     key={al.id}
                     onClick={() => toggleAlergeno(al.id)}
                     className={[
                       'flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium border transition-all',
-                      activo
-                        ? 'bg-red-600 text-white border-red-600 shadow-sm'
-                        : 'bg-stone-50 text-stone-600 border-stone-200 hover:border-stone-300',
+                      activo ? 'bg-red-600 text-white border-red-600 shadow-sm' : 'bg-stone-50 text-stone-600 border-stone-200 hover:border-stone-300',
                     ].join(' ')}
                   >
                     <span className="text-base leading-none">{al.icono}</span>
@@ -207,10 +196,7 @@ export default function CartaMenu({ categorias, productos: prodIniciales, alerge
               })}
             </div>
             {alergenosActivos.size > 0 && (
-              <button
-                onClick={() => setAlergenosActivos(new Set())}
-                className="text-xs text-stone-500 underline underline-offset-2"
-              >
+              <button onClick={() => setAlergenosActivos(new Set())} className="text-xs text-stone-500 underline underline-offset-2">
                 Rimuovi tutti i filtri
               </button>
             )}
@@ -218,30 +204,34 @@ export default function CartaMenu({ categorias, productos: prodIniciales, alerge
         )}
       </div>
 
-      {/* Nav de categorías — sticky bajo el header */}
+      {/* ── Nav categorías ─────────────────────────────────── */}
       {categoriasSorted.length > 0 && (
-        <div className="sticky top-11 z-30 bg-stone-50/90 backdrop-blur-sm border-b border-stone-100 mb-2">
-          <div className="flex gap-1 px-4 py-2 overflow-x-auto scrollbar-none">
-            {porCategoria.map(({ cat }) => (
-              <button
-                key={cat.id}
-                onClick={() => scrollACategoria(cat.id)}
-                className={[
-                  'flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-medium transition-colors',
-                  categoriaActiva === cat.id
-                    ? 'bg-stone-900 text-white'
-                    : 'bg-white text-stone-600 border border-stone-200 hover:border-stone-300',
-                ].join(' ')}
-              >
-                {nombre(cat.traducciones)}
-              </button>
-            ))}
+        <div className="sticky top-11 z-30 bg-stone-50/95 backdrop-blur-sm border-b border-stone-100">
+          <div className="flex gap-1.5 px-4 py-2.5 overflow-x-auto scrollbar-none">
+            {porCategoria.map(({ cat }) => {
+              const activa = categoriaActiva === cat.id
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => scrollACategoria(cat.id)}
+                  className={[
+                    'flex-shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all',
+                    activa
+                      ? 'bg-stone-900 text-white shadow-sm scale-[1.02]'
+                      : 'bg-white text-stone-600 border border-stone-200 hover:border-stone-300 hover:bg-stone-50',
+                  ].join(' ')}
+                >
+                  <span>{catEmoji[cat.slug] ?? '🍽️'}</span>
+                  {nombre(cat.traducciones)}
+                </button>
+              )
+            })}
           </div>
         </div>
       )}
 
-      {/* Contenido */}
-      <div className="px-4 space-y-8 mt-4">
+      {/* ── Contenido por categoría ────────────────────────── */}
+      <div className="px-4 pt-6 space-y-10">
         {porCategoria.length === 0 ? (
           <div className="py-16 text-center space-y-2">
             <p className="text-lg font-semibold text-stone-400">{t.sin_resultados}</p>
@@ -253,11 +243,15 @@ export default function CartaMenu({ categorias, productos: prodIniciales, alerge
               key={cat.id}
               ref={(el) => { if (el) seccionRefs.current.set(cat.id, el) }}
             >
-              <h2 className="text-base font-bold text-stone-800 mb-3 flex items-center gap-2">
-                {nombre(cat.traducciones)}
-                <span className="text-xs font-normal text-stone-400">({items.length})</span>
-              </h2>
-              <div className="space-y-3">
+              {/* Cabecera de sección */}
+              <div className="flex items-center gap-3 mb-4">
+                <span className="text-2xl">{catEmoji[cat.slug] ?? '🍽️'}</span>
+                <div>
+                  <h2 className="text-lg font-black text-stone-900 tracking-tight">{nombre(cat.traducciones)}</h2>
+                  <p className="text-xs text-stone-400">{items.length} {items.length === 1 ? 'piatto' : 'piatti'}</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 gap-3">
                 {items.map((prod) => (
                   <CartaProducto
                     key={prod.id}
@@ -273,13 +267,12 @@ export default function CartaMenu({ categorias, productos: prodIniciales, alerge
         )}
       </div>
 
-      {/* Scroll to top */}
+      {/* ── Scroll top ─────────────────────────────────────── */}
       {showScrollTop && (
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           className="fixed bottom-6 right-4 w-10 h-10 bg-stone-900 text-white rounded-full
-                     flex items-center justify-center shadow-lg hover:bg-stone-800 transition-all
-                     active:scale-90 z-50"
+                     flex items-center justify-center shadow-lg hover:bg-stone-800 transition-all active:scale-90 z-50"
           aria-label={t.volver_arriba}
         >
           <ChevronUp className="w-5 h-5" strokeWidth={2} />

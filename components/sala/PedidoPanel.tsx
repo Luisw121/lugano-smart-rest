@@ -54,6 +54,8 @@ export default function PedidoPanel({ mesa, pedido, productos, locale, dict, onC
   const [cerrando, setCerrando] = useState(false)
   const [metodoPago, setMetodoPago] = useState<'efectivo' | 'tarjeta' | 'otros'>('efectivo')
   const [loading, setLoading] = useState(false)
+  const [notaEditando, setNotaEditando] = useState<string | null>(null)
+  const [notaTexto, setNotaTexto] = useState('')
 
   const supabase = createClient()
 
@@ -106,6 +108,12 @@ export default function PedidoPanel({ mesa, pedido, productos, locale, dict, onC
     } else {
       await supabase.from('pedido_items').update({ cantidad: item.cantidad + delta }).eq('id', item.id)
     }
+    onUpdated()
+  }
+
+  async function guardarNota(item: PedidoItem) {
+    await supabase.from('pedido_items').update({ notas: notaTexto.trim() || null }).eq('id', item.id)
+    setNotaEditando(null)
     onUpdated()
   }
 
@@ -233,7 +241,8 @@ export default function PedidoPanel({ mesa, pedido, productos, locale, dict, onC
             const colorClass = itemEstadoColor[item.estado] ?? 'text-gray-400'
 
             return (
-              <div key={item.id} className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-xl group">
+              <div key={item.id} className="p-3 bg-gray-50 dark:bg-gray-800 rounded-xl group">
+                <div className="flex items-center gap-3">
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{nombre}</p>
                   <div className="flex items-center gap-1.5 mt-0.5">
@@ -263,6 +272,34 @@ export default function PedidoPanel({ mesa, pedido, productos, locale, dict, onC
                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300 w-16 text-right tabular-nums">
                   CHF {(item.cantidad * item.precio_unitario).toFixed(2)}
                 </span>
+                </div>
+                {/* Nota inline */}
+                {notaEditando === item.id ? (
+                  <div className="mt-2 flex gap-1.5">
+                    <input
+                      autoFocus
+                      type="text"
+                      value={notaTexto}
+                      onChange={(e) => setNotaTexto(e.target.value)}
+                      onKeyDown={(e) => { if (e.key === 'Enter') guardarNota(item); if (e.key === 'Escape') setNotaEditando(null) }}
+                      placeholder="es. senza glutine..."
+                      className="flex-1 px-2 py-1 text-xs bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600
+                                 rounded-lg text-gray-800 dark:text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                    />
+                    <button onClick={() => guardarNota(item)} className="px-2 py-1 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs rounded-lg">✓</button>
+                    <button onClick={() => setNotaEditando(null)} className="px-2 py-1 text-gray-400 text-xs rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">✕</button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => { setNotaEditando(item.id); setNotaTexto((item as PedidoItem & { notas?: string }).notas ?? '') }}
+                    className="mt-1.5 text-xs text-gray-400 dark:text-gray-600 hover:text-gray-600 dark:hover:text-gray-400 transition-colors text-left w-full"
+                  >
+                    {(item as PedidoItem & { notas?: string }).notas
+                      ? <span className="text-amber-500 dark:text-amber-400">📝 {(item as PedidoItem & { notas?: string }).notas}</span>
+                      : <span className="opacity-0 group-hover:opacity-100 transition-opacity">+ nota</span>
+                    }
+                  </button>
+                )}
               </div>
             )
           })

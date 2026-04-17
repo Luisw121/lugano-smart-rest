@@ -52,8 +52,20 @@ export default function EmpleadosView({ empleadosIniciales, dict }: Props) {
   const supabase = createClient()
 
   async function recargar() {
-    const { data } = await supabase.from('v_empleados_estado').select('*').order('nombre')
-    if (data) setEmpleados(data as Empleado[])
+    const { data: emp } = await supabase.from('empleados').select('*').eq('activo', true).order('nombre')
+    if (!emp) return
+    const hoy = new Date(); hoy.setHours(0, 0, 0, 0)
+    const { data: fiches } = await supabase
+      .from('fichajes').select('empleado_id, tipo, created_at')
+      .gte('created_at', hoy.toISOString()).order('created_at', { ascending: false })
+    const lastFichaje = new Map<string, { tipo: string; created_at: string }>()
+    for (const f of fiches ?? []) {
+      if (!lastFichaje.has(f.empleado_id)) lastFichaje.set(f.empleado_id, { tipo: f.tipo, created_at: f.created_at })
+    }
+    setEmpleados(emp.map((e) => {
+      const lf = lastFichaje.get(e.id)
+      return { ...e, ultimo_fichaje: lf?.tipo ?? null, ultimo_fichaje_at: lf?.created_at ?? null, en_turno: lf?.tipo === 'entrada' }
+    }) as Empleado[])
   }
 
   function abrirNuevo() {

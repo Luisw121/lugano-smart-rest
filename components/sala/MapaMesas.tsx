@@ -28,6 +28,8 @@ export default function MapaMesas({
   const [pedidos, setPedidos] = useState<Pedido[]>(pedidosIniciales)
   const [mesaActiva, setMesaActiva] = useState<string | null>(null)
   const [editMode, setEditMode] = useState(false)
+  const [comensalesDialog, setComensalesDialog] = useState<{ mesaId: string; numero: number } | null>(null)
+  const [comensalesNum, setComensalesNum] = useState(2)
 
   // Drag state
   const dragging = useRef<{ id: string; startX: number; startY: number; origX: number; origY: number } | null>(null)
@@ -150,6 +152,28 @@ export default function MapaMesas({
     return pedidos.find((p) => p.mesa_id === mesaId) ?? null
   }
 
+  function handleMesaClick(mesa: Mesa) {
+    if (editMode) return
+    // If libre and no active order → ask for comensales first
+    if (mesa.estado === 'libre' && !getPedidoDeMesa(mesa.id)) {
+      setComensalesNum(2)
+      setComensalesDialog({ mesaId: mesa.id, numero: mesa.numero })
+    } else {
+      setMesaActiva(mesa.id === mesaActiva ? null : mesa.id)
+    }
+  }
+
+  async function confirmarComensales() {
+    if (!comensalesDialog) return
+    // Mark table as occupied
+    await supabase.from('mesas').update({ estado: 'ocupada' }).eq('id', comensalesDialog.mesaId)
+    // Create pedido with num_comensales
+    await supabase.from('pedidos').insert({ mesa_id: comensalesDialog.mesaId, estado: 'abierto', num_comensales: comensalesNum })
+    setComensalesDialog(null)
+    setMesaActiva(comensalesDialog.mesaId)
+    await refreshPedidos()
+  }
+
   const mesaActivaData = mesas.find((m) => m.id === mesaActiva) ?? null
   const pedidoActivo = mesaActiva ? getPedidoDeMesa(mesaActiva) : null
 
@@ -230,7 +254,7 @@ export default function MapaMesas({
                 numItems={numItems}
                 editMode={editMode}
                 dict={(t.estado as Record<string, string>)}
-                onClick={() => setMesaActiva(mesa.id === mesaActiva ? null : mesa.id)}
+                onClick={() => handleMesaClick(mesa)}
                 onDragStart={(e) => startDrag(e, mesa)}
               />
             )
@@ -269,6 +293,51 @@ export default function MapaMesas({
           onClose={() => setMesaActiva(null)}
           onUpdated={refreshPedidos}
         />
+      )}
+
+      {/* Dialog comensales */}
+      {comensalesDialog && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-xs p-6">
+            <h3 className="text-base font-bold text-gray-900 dark:text-white mb-1">
+              {(t.tavolo as string)} {comensalesDialog.numero}
+            </h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-5">
+              {(t.capacidad as string)}
+            </p>
+            <div className="flex items-center justify-center gap-6 mb-6">
+              <button
+                onClick={() => setComensalesNum((n) => Math.max(1, n - 1))}
+                className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xl font-bold
+                           hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+              >−</button>
+              <span className="text-3xl font-bold text-gray-900 dark:text-white w-12 text-center tabular-nums">
+                {comensalesNum}
+              </span>
+              <button
+                onClick={() => setComensalesNum((n) => Math.min(20, n + 1))}
+                className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xl font-bold
+                           hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+              >+</button>
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setComensalesDialog(null)}
+                className="flex-1 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl text-sm font-medium
+                           text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+              >
+                {(dict.comun as Record<string, string>).cancelar}
+              </button>
+              <button
+                onClick={confirmarComensales}
+                className="flex-1 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-xl text-sm font-semibold
+                           hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors"
+              >
+                {(dict.comun as Record<string, string>).confirmar}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   )

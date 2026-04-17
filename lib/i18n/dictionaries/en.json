@@ -7,7 +7,9 @@
     "kds": "Kitchen",
     "menu": "Menu",
     "empleados": "Employees",
-    "fichajes": "Timesheets"
+    "fichajes": "Timesheets",
+    "historial": "History",
+    "platos": "Menu"
   },
   "inventario": {
     "titolo": "Inventory Management",

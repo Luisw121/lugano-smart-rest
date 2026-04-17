@@ -9,6 +9,8 @@ const RUTAS_PROTEGIDAS: Record<string, string> = {
   '/qr':         'lsr_manager',
   '/empleados':  'lsr_manager',
   '/fichajes':   'lsr_manager',
+  '/historial':  'lsr_manager',
+  '/platos':     'lsr_manager',
   '/mesas':      'lsr_sala',
   '/kds':        'lsr_cucina',
 }

@@ -30,62 +30,59 @@ export default function CartaProducto({ producto, locale, dict, alergenosActivos
     producto.traducciones[0]
 
   const alergenos = producto.alergenos.map((a) => a.alergeno)
-
-  // Resaltar alérgenos que el cliente filtra
   const contieneActivos = alergenos.filter((a) => alergenosActivos.has(a.id))
-
   const desactivado = !producto.disponible
 
   return (
     <div
       className={[
-        'flex gap-4 p-4 rounded-2xl border transition-all',
+        'flex gap-0 rounded-2xl overflow-hidden border transition-all',
         desactivado
           ? 'border-stone-100 bg-stone-50 opacity-60'
-          : 'border-stone-100 bg-white hover:border-stone-200 hover:shadow-sm',
+          : 'border-stone-100 bg-white hover:border-stone-200 hover:shadow-md',
       ].join(' ')}
     >
-      {/* Imagen */}
-      {producto.imagen_url ? (
-        <div className="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 bg-stone-100">
+      {/* Imagen — izquierda */}
+      <div className="w-28 h-28 flex-shrink-0 bg-stone-100 relative overflow-hidden">
+        {producto.imagen_url ? (
           <img
             src={producto.imagen_url}
             alt={trad?.nombre ?? ''}
             className="w-full h-full object-cover"
+            loading="lazy"
           />
-        </div>
-      ) : (
-        <div className="w-20 h-20 rounded-xl flex-shrink-0 bg-stone-100 flex items-center justify-center text-2xl">
-          🍽️
-        </div>
-      )}
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-3xl bg-stone-100">
+            🍽️
+          </div>
+        )}
+        {desactivado && (
+          <div className="absolute inset-0 bg-stone-100/80 flex items-center justify-center">
+            <span className="text-[10px] font-semibold text-stone-400 uppercase tracking-wider rotate-[-15deg]">
+              {dict.agotado}
+            </span>
+          </div>
+        )}
+      </div>
 
       {/* Contenido */}
-      <div className="flex-1 min-w-0">
-        <div className="flex items-start justify-between gap-2">
-          <h3
-            className={[
-              'text-sm font-semibold leading-tight',
-              desactivado ? 'text-stone-400' : 'text-stone-900',
-            ].join(' ')}
-          >
-            {trad?.nombre ?? '—'}
-          </h3>
-          <span
-            className={[
-              'text-sm font-bold flex-shrink-0 tabular-nums',
-              desactivado ? 'text-stone-400' : 'text-stone-900',
-            ].join(' ')}
-          >
-            {dict.chf} {producto.precio.toFixed(2)}
-          </span>
-        </div>
+      <div className="flex-1 min-w-0 px-4 py-3 flex flex-col justify-between">
+        <div>
+          <div className="flex items-start justify-between gap-2">
+            <h3 className={`text-sm font-bold leading-tight ${desactivado ? 'text-stone-400' : 'text-stone-900'}`}>
+              {trad?.nombre ?? '—'}
+            </h3>
+            <span className={`text-sm font-black flex-shrink-0 tabular-nums ${desactivado ? 'text-stone-300' : 'text-stone-900'}`}>
+              {dict.chf} {producto.precio.toFixed(2)}
+            </span>
+          </div>
 
-        {trad?.descripcion && (
-          <p className="text-xs text-stone-500 mt-0.5 line-clamp-2 leading-relaxed">
-            {trad.descripcion}
-          </p>
-        )}
+          {trad?.descripcion && (
+            <p className="text-xs text-stone-500 mt-1 line-clamp-2 leading-relaxed">
+              {trad.descripcion}
+            </p>
+          )}
+        </div>
 
         {/* Alérgenos */}
         {alergenos.length > 0 && (
@@ -101,7 +98,7 @@ export default function CartaProducto({ producto, locale, dict, alergenosActivos
                   key={al.id}
                   title={`${dict.alergenos_contiene}: ${nombre}`}
                   className={[
-                    'inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-md text-xs transition-colors',
+                    'inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-md text-[10px] font-medium transition-colors',
                     esActivo
                       ? 'bg-red-100 text-red-700 ring-1 ring-red-300'
                       : 'bg-stone-100 text-stone-500',
@@ -112,14 +109,12 @@ export default function CartaProducto({ producto, locale, dict, alergenosActivos
                 </span>
               )
             })}
+            {contieneActivos.length > 0 && (
+              <span className="text-[10px] text-red-500 font-medium self-center ml-0.5">
+                ⚠ {dict.alergenos_contiene}
+              </span>
+            )}
           </div>
-        )}
-
-        {/* Badge agotado */}
-        {desactivado && (
-          <span className="inline-block mt-2 text-xs font-medium text-stone-400 bg-stone-100 px-2 py-0.5 rounded-full">
-            {dict.agotado}
-          </span>
         )}
       </div>
     </div>

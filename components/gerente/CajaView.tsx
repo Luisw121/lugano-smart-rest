@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useTransition } from 'react'
-import { Plus, Banknote, CreditCard, MoreHorizontal, TrendingUp, TrendingDown, Scale } from 'lucide-react'
+import { Plus, Banknote, CreditCard, MoreHorizontal, TrendingUp, TrendingDown, Scale, Download, Printer } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import type { Locale } from '@/types/database'
@@ -89,6 +89,44 @@ export default function CajaView({ movimientosIniciales, pedidosHoy, dict, local
     return `CHF ${n.toFixed(2)}`
   }
 
+  function exportarCSV() {
+    const hoy = new Date().toLocaleDateString('it-IT')
+    const header = 'Ora,Tipo,Metodo,Importo,Descrizione'
+    const rows = movimientos.map((m) => [
+      new Date(m.created_at).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' }),
+      m.tipo, m.metodo,
+      m.monto.toFixed(2),
+      `"${(m.concepto ?? '').replace(/"/g, '""')}"`,
+    ].join(','))
+    const csv = [header, ...rows, '', `Entrate,${entradas.toFixed(2)}`, `Uscite,${salidas.toFixed(2)}`, `Saldo,${saldo.toFixed(2)}`].join('\n')
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a'); a.href = url; a.download = `cassa_${hoy.replace(/\//g,'-')}.csv`; a.click()
+    URL.revokeObjectURL(url)
+  }
+
+  function stampaCierre() {
+    const hoy = new Date().toLocaleString('it-IT')
+    const righe = movimientos.map((m) =>
+      `${new Date(m.created_at).toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'})}  ${m.tipo.padEnd(7)}  ${m.metodo.padEnd(8)}  CHF ${m.monto.toFixed(2).padStart(8)}  ${m.concepto ?? ''}`
+    ).join('\n')
+    const html = `<html><head><style>
+      body{font-family:monospace;font-size:12px;width:600px;margin:0 auto;padding:20px}
+      h2{text-align:center;margin:0 0 4px}p{text-align:center;color:#666;font-size:11px;margin:0 0 16px}
+      pre{white-space:pre-wrap;margin:0}hr{border:none;border-top:1px dashed #aaa;margin:10px 0}
+      .kpi{display:flex;justify-content:space-between;margin:4px 0;font-size:13px}
+      .verde{color:#059669}.rojo{color:#dc2626}.negrita{font-weight:bold}
+    </style></head><body>
+      <h2>Lugano Smart Rest — Chiusura Cassa</h2>
+      <p>${hoy}</p><hr>
+      <pre>${righe}</pre><hr>
+      <div class="kpi"><span>Entrate:</span><span class="verde negrita">CHF ${entradas.toFixed(2)}</span></div>
+      <div class="kpi"><span>Uscite:</span><span class="rojo negrita">CHF ${salidas.toFixed(2)}</span></div>
+      <div class="kpi negrita"><span>Saldo:</span><span>CHF ${saldo.toFixed(2)}</span></div>
+    </body></html>`
+    const w = window.open('','_blank','width=680,height=700'); if(w){w.document.write(html);w.document.close();w.print()}
+  }
+
   return (
     <div className="px-8 py-8 max-w-5xl mx-auto">
       {/* Header */}
@@ -97,14 +135,34 @@ export default function CajaView({ movimientosIniciales, pedidosHoy, dict, local
           <h1 className="text-2xl font-semibold text-gray-900 tracking-tight">{t.titolo as string}</h1>
           <p className="text-sm text-gray-500 mt-1">{t.sottotitolo as string}</p>
         </div>
-        <button
-          onClick={() => setShowForm((v) => !v)}
-          className="flex items-center gap-2 px-4 py-2.5 bg-gray-900 text-white text-sm font-medium
-                     rounded-xl hover:bg-gray-800 transition-all active:scale-95"
-        >
-          <Plus className="w-4 h-4" strokeWidth={2} />
-          {t.nuevo_movimiento as string}
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={exportarCSV}
+            title="Esporta CSV"
+            className="flex items-center gap-1.5 px-3 py-2.5 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 text-sm font-medium
+                       rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+          >
+            <Download className="w-4 h-4" strokeWidth={1.5} />
+            CSV
+          </button>
+          <button
+            onClick={stampaCierre}
+            title="Stampa chiusura"
+            className="flex items-center gap-1.5 px-3 py-2.5 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 text-sm font-medium
+                       rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+          >
+            <Printer className="w-4 h-4" strokeWidth={1.5} />
+            PDF
+          </button>
+          <button
+            onClick={() => setShowForm((v) => !v)}
+            className="flex items-center gap-2 px-4 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-sm font-medium
+                       rounded-xl hover:bg-gray-800 dark:hover:bg-gray-100 transition-all active:scale-95"
+          >
+            <Plus className="w-4 h-4" strokeWidth={2} />
+            {t.nuevo_movimiento as string}
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

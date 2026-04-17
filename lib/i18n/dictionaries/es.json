@@ -7,7 +7,9 @@
     "kds": "Cocina",
     "menu": "Carta",
     "empleados": "Empleados",
-    "fichajes": "Fichajes"
+    "fichajes": "Fichajes",
+    "historial": "Historial",
+    "platos": "Carta"
   },
   "inventario": {
     "titolo": "Gestión de Inventario",
