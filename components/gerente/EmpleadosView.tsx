@@ -85,17 +85,24 @@ export default function EmpleadosView({ empleadosIniciales, dict }: Props) {
     if (!/^\d{4}$/.test(form.pin)) { setError(String(emp.pin)); return }
     setLoading(true)
     setError('')
+    let dbError: { message: string } | null = null
     if (modal.empleado) {
-      await supabase
+      const { error } = await supabase
         .from('empleados')
         .update({ nombre: form.nombre.trim(), pin: form.pin, rol: form.rol })
         .eq('id', modal.empleado.id)
+      dbError = error
     } else {
-      await supabase
+      const { error } = await supabase
         .from('empleados')
         .insert({ nombre: form.nombre.trim(), pin: form.pin, rol: form.rol, activo: true })
+      dbError = error
     }
     setLoading(false)
+    if (dbError) {
+      setError(`Error DB: ${dbError.message}`)
+      return
+    }
     setModal({ open: false, empleado: null })
     await recargar()
   }
