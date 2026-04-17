@@ -1,0 +1,188 @@
+{
+  "nav": {
+    "inventario": "Inventario",
+    "cassa": "Cassa",
+    "metriche": "Metriche",
+    "tavoli": "Tavoli",
+    "kds": "Cucina",
+    "menu": "Menu"
+  },
+  "inventario": {
+    "titolo": "Gestione Inventario",
+    "sottotitolo": "Monitora stock e ingredienti",
+    "aggiungi": "Aggiungi prodotto",
+    "cerca": "Cerca ingrediente...",
+    "colonne": {
+      "nome": "Nome",
+      "unita": "Unità",
+      "stock": "Stock attuale",
+      "minimo": "Minimo",
+      "costo": "Costo/unità",
+      "fornitore": "Fornitore",
+      "stato": "Stato",
+      "azioni": "Azioni"
+    },
+    "stato": {
+      "ok": "OK",
+      "basso": "Basso",
+      "critico": "Critico",
+      "esaurito": "Esaurito"
+    },
+    "modal": {
+      "titolo_nuovo": "Nuovo ingrediente",
+      "titolo_modifica": "Modifica ingrediente",
+      "nome": "Nome ingrediente",
+      "unita": "Unità di misura",
+      "stock_attuale": "Stock attuale",
+      "stock_minimo": "Stock minimo (allarme)",
+      "costo_unita": "Costo per unità (CHF)",
+      "fornitore": "Fornitore",
+      "salva": "Salva",
+      "annulla": "Annulla",
+      "elimina": "Elimina"
+    },
+    "alerts": {
+      "stock_basso": "ingredienti sotto il livello minimo",
+      "esauriti": "ingredienti esauriti"
+    },
+    "unidades": {
+      "kg": "kg", "g": "grammi", "l": "litri",
+      "ml": "millilitri", "unidad": "unità", "porciones": "porzioni"
+    }
+  },
+  "caja": {
+    "titolo": "Cassa",
+    "sottotitolo": "Registra e monitora i movimenti",
+    "nuevo_movimiento": "Nuovo movimento",
+    "tipo": { "ingreso": "Entrata", "egreso": "Uscita" },
+    "metodo": { "efectivo": "Contanti", "tarjeta": "Carta", "otros": "Altro" },
+    "monto": "Importo (CHF)",
+    "concepto": "Descrizione",
+    "concepto_placeholder": "es. Vendita tavolo 5, Acquisto forniture...",
+    "guardar": "Registra",
+    "resumen_hoy": "Riepilogo oggi",
+    "total_entrate": "Entrate",
+    "total_uscite": "Uscite",
+    "saldo": "Saldo",
+    "historial": "Movimenti di oggi",
+    "sin_movimientos": "Nessun movimento registrato oggi",
+    "hora": "Ora",
+    "pedido_ref": "Ref. ordine",
+    "tipo_col": "Tipo",
+    "metodo_col": "Metodo",
+    "monto_col": "Importo",
+    "concepto_col": "Descrizione"
+  },
+  "metricas": {
+    "titolo": "Metriche",
+    "sottotitolo": "Panoramica delle vendite e performance",
+    "periodo": { "hoy": "Oggi", "semana": "Settimana", "mes": "Mese" },
+    "kpis": {
+      "ingresos": "Ricavi",
+      "ordenes": "Ordini",
+      "ticket_medio": "Scontrino medio",
+      "alertas_stock": "Avvisi stock"
+    },
+    "ventas_por_metodo": "Vendite per metodo",
+    "platos_top": "Piatti più venduti",
+    "ventas_por_hora": "Vendite per ora",
+    "sin_datos": "Nessun dato per il periodo selezionato",
+    "ordenes_activas": "Ordini attivi ora",
+    "mesas_ocupadas": "Tavoli occupati",
+    "items_pendientes": "Articoli in cucina"
+  },
+  "carta": {
+    "bienvenida": "Benvenuto",
+    "subtitulo": "Cucina italiana a Lugano",
+    "buscar": "Cerca nel menu...",
+    "alergenos_titulo": "Filtri allergeni",
+    "alergenos_info": "Tocca un allergene per nascondere i piatti che lo contengono",
+    "sin_resultados": "Nessun piatto corrisponde ai filtri selezionati",
+    "sin_resultados_sub": "Prova a rimuovere qualche filtro",
+    "agotado": "Non disponibile",
+    "precio_desde": "da CHF",
+    "alergenos_contiene": "Contiene",
+    "todas_categorias": "Tutto il menu",
+    "volver_arriba": "Torna su",
+    "idioma": "Lingua",
+    "chf": "CHF"
+  },
+  "kds": {
+    "titolo": "Cucina — Display Comande",
+    "filtros": {
+      "todos": "Tutte",
+      "pendiente": "In attesa",
+      "en_preparacion": "In preparazione",
+      "listo": "Pronti"
+    },
+    "tavolo": "Tavolo",
+    "comanda": "Comanda",
+    "hace": "fa",
+    "minutos": "min",
+    "items_pendientes": "articoli in attesa",
+    "marcar_preparacion": "In preparazione",
+    "marcar_listo": "Pronto",
+    "marcar_entregado": "Consegnato",
+    "sin_comandas": "Nessuna comanda attiva",
+    "sin_comandas_desc": "Le nuove comande appariranno qui in tempo reale",
+    "urgente": "URGENTE",
+    "nueva": "NUOVA",
+    "completada": "Completata",
+    "notas": "Note"
+  },
+  "sala": {
+    "titolo": "Sala — Mappa Tavoli",
+    "modo_edicion": "Modifica layout",
+    "modo_normal": "Vista normale",
+    "tavolo": "Tavolo",
+    "capacidad": "Posti",
+    "zona": "Zona",
+    "estado": {
+      "libre": "Libero",
+      "ocupada": "Occupato",
+      "reservada": "Riservato"
+    },
+    "zonas": {
+      "sala": "Sala",
+      "terraza": "Terrazza",
+      "privado": "Privato"
+    },
+    "pedido": {
+      "nuevo": "Nuovo ordine",
+      "sin_pedido": "Nessun ordine attivo",
+      "sin_pedido_desc": "Inizia un nuovo ordine per questo tavolo",
+      "agregar_producto": "Aggiungi prodotto",
+      "cerrar_cuenta": "Chiudi conto",
+      "metodo_pago": "Metodo di pagamento",
+      "efectivo": "Contanti",
+      "tarjeta": "Carta",
+      "otros": "Altro",
+      "total": "Totale",
+      "confirmar_cierre": "Conferma chiusura",
+      "items": "articoli",
+      "estado_item": {
+        "pendiente": "In attesa",
+        "en_preparacion": "In preparazione",
+        "listo": "Pronto",
+        "entregado": "Consegnato"
+      }
+    },
+    "agregar_mesa": "Aggiungi tavolo",
+    "editar_mesa": "Modifica tavolo",
+    "numero_mesa": "Numero tavolo",
+    "guardar_posicion": "Posizione salvata"
+  },
+  "comun": {
+    "guardar": "Salva",
+    "cancelar": "Annulla",
+    "eliminar": "Elimina",
+    "editar": "Modifica",
+    "confirmar": "Conferma",
+    "cerrar": "Chiudi",
+    "si": "Sì",
+    "no": "No",
+    "cargando": "Caricamento...",
+    "sin_datos": "Nessun dato disponibile",
+    "error": "Si è verificato un errore"
+  }
+}

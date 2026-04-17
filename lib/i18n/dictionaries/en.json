@@ -1,0 +1,188 @@
+{
+  "nav": {
+    "inventario": "Inventory",
+    "cassa": "Cash Register",
+    "metriche": "Metrics",
+    "tavoli": "Tables",
+    "kds": "Kitchen",
+    "menu": "Menu"
+  },
+  "inventario": {
+    "titolo": "Inventory Management",
+    "sottotitolo": "Monitor stock and ingredients",
+    "aggiungi": "Add ingredient",
+    "cerca": "Search ingredient...",
+    "colonne": {
+      "nome": "Name",
+      "unita": "Unit",
+      "stock": "Current stock",
+      "minimo": "Minimum",
+      "costo": "Cost/unit",
+      "fornitore": "Supplier",
+      "stato": "Status",
+      "azioni": "Actions"
+    },
+    "stato": {
+      "ok": "OK",
+      "basso": "Low",
+      "critico": "Critical",
+      "esaurito": "Out of stock"
+    },
+    "modal": {
+      "titolo_nuovo": "New ingredient",
+      "titolo_modifica": "Edit ingredient",
+      "nome": "Ingredient name",
+      "unita": "Unit of measure",
+      "stock_attuale": "Current stock",
+      "stock_minimo": "Minimum stock (alert)",
+      "costo_unita": "Cost per unit (CHF)",
+      "fornitore": "Supplier",
+      "salva": "Save",
+      "annulla": "Cancel",
+      "elimina": "Delete"
+    },
+    "alerts": {
+      "stock_basso": "ingredients below minimum level",
+      "esauriti": "ingredients out of stock"
+    },
+    "unidades": {
+      "kg": "kg", "g": "grams", "l": "litres",
+      "ml": "millilitres", "unidad": "units", "porciones": "portions"
+    }
+  },
+  "caja": {
+    "titolo": "Cash Register",
+    "sottotitolo": "Record and monitor movements",
+    "nuevo_movimiento": "New movement",
+    "tipo": { "ingreso": "Income", "egreso": "Expense" },
+    "metodo": { "efectivo": "Cash", "tarjeta": "Card", "otros": "Other" },
+    "monto": "Amount (CHF)",
+    "concepto": "Description",
+    "concepto_placeholder": "e.g. Table 5 sale, Supply purchase...",
+    "guardar": "Record",
+    "resumen_hoy": "Today's summary",
+    "total_entrate": "Income",
+    "total_uscite": "Expenses",
+    "saldo": "Balance",
+    "historial": "Today's movements",
+    "sin_movimientos": "No movements recorded today",
+    "hora": "Time",
+    "pedido_ref": "Order ref.",
+    "tipo_col": "Type",
+    "metodo_col": "Method",
+    "monto_col": "Amount",
+    "concepto_col": "Description"
+  },
+  "metricas": {
+    "titolo": "Metrics",
+    "sottotitolo": "Sales overview and performance",
+    "periodo": { "hoy": "Today", "semana": "Week", "mes": "Month" },
+    "kpis": {
+      "ingresos": "Revenue",
+      "ordenes": "Orders",
+      "ticket_medio": "Avg. ticket",
+      "alertas_stock": "Stock alerts"
+    },
+    "ventas_por_metodo": "Sales by method",
+    "platos_top": "Top dishes",
+    "ventas_por_hora": "Sales by hour",
+    "sin_datos": "No data for the selected period",
+    "ordenes_activas": "Active orders now",
+    "mesas_ocupadas": "Occupied tables",
+    "items_pendientes": "Items in kitchen"
+  },
+  "carta": {
+    "bienvenida": "Welcome",
+    "subtitulo": "Italian cuisine in Lugano",
+    "buscar": "Search the menu...",
+    "alergenos_titulo": "Allergen filters",
+    "alergenos_info": "Tap an allergen to hide dishes containing it",
+    "sin_resultados": "No dishes match the selected filters",
+    "sin_resultados_sub": "Try removing some filters",
+    "agotado": "Not available",
+    "precio_desde": "from CHF",
+    "alergenos_contiene": "Contains",
+    "todas_categorias": "Full menu",
+    "volver_arriba": "Back to top",
+    "idioma": "Language",
+    "chf": "CHF"
+  },
+  "kds": {
+    "titolo": "Kitchen Display System",
+    "filtros": {
+      "todos": "All",
+      "pendiente": "Pending",
+      "en_preparacion": "Preparing",
+      "listo": "Ready"
+    },
+    "tavolo": "Table",
+    "comanda": "Order",
+    "hace": "ago",
+    "minutos": "min",
+    "items_pendientes": "items pending",
+    "marcar_preparacion": "Start",
+    "marcar_listo": "Ready",
+    "marcar_entregado": "Delivered",
+    "sin_comandas": "No active orders",
+    "sin_comandas_desc": "New orders will appear here in real time",
+    "urgente": "URGENT",
+    "nueva": "NEW",
+    "completada": "Complete",
+    "notas": "Notes"
+  },
+  "sala": {
+    "titolo": "Floor — Table Map",
+    "modo_edicion": "Edit layout",
+    "modo_normal": "Normal view",
+    "tavolo": "Table",
+    "capacidad": "Seats",
+    "zona": "Zone",
+    "estado": {
+      "libre": "Free",
+      "ocupada": "Occupied",
+      "reservada": "Reserved"
+    },
+    "zonas": {
+      "sala": "Hall",
+      "terraza": "Terrace",
+      "privado": "Private"
+    },
+    "pedido": {
+      "nuevo": "New order",
+      "sin_pedido": "No active order",
+      "sin_pedido_desc": "Start a new order for this table",
+      "agregar_producto": "Add product",
+      "cerrar_cuenta": "Close bill",
+      "metodo_pago": "Payment method",
+      "efectivo": "Cash",
+      "tarjeta": "Card",
+      "otros": "Other",
+      "total": "Total",
+      "confirmar_cierre": "Confirm close",
+      "items": "items",
+      "estado_item": {
+        "pendiente": "Pending",
+        "en_preparacion": "Preparing",
+        "listo": "Ready",
+        "entregado": "Delivered"
+      }
+    },
+    "agregar_mesa": "Add table",
+    "editar_mesa": "Edit table",
+    "numero_mesa": "Table number",
+    "guardar_posicion": "Position saved"
+  },
+  "comun": {
+    "guardar": "Save",
+    "cancelar": "Cancel",
+    "eliminar": "Delete",
+    "editar": "Edit",
+    "confirmar": "Confirm",
+    "cerrar": "Close",
+    "si": "Yes",
+    "no": "No",
+    "cargando": "Loading...",
+    "sin_datos": "No data available",
+    "error": "An error occurred"
+  }
+}
