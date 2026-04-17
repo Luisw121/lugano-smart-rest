@@ -132,8 +132,8 @@ export default function CajaView({ movimientosIniciales, pedidosHoy, dict, local
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-900 tracking-tight">{t.titolo as string}</h1>
-          <p className="text-sm text-gray-500 mt-1">{t.sottotitolo as string}</p>
+          <h1 className="text-2xl font-semibold text-gray-900 dark:text-white tracking-tight">{t.titolo as string}</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{t.sottotitolo as string}</p>
         </div>
         <div className="flex items-center gap-2">
           <button
@@ -174,7 +174,7 @@ export default function CajaView({ movimientosIniciales, pedidosHoy, dict, local
             { label: t.total_uscite as string,  value: chf(salidas),  icon: TrendingDown, color: 'text-red-500',     bg: 'bg-red-50' },
             { label: t.saldo as string,         value: chf(saldo),    icon: Scale,        color: saldo >= 0 ? 'text-gray-900' : 'text-red-600', bg: 'bg-gray-50' },
           ].map(({ label, value, icon: Icon, color, bg }) => (
-            <div key={label} className="bg-white border border-gray-100 rounded-2xl p-4 flex items-center gap-4">
+            <div key={label} className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl p-4 flex items-center gap-4">
               <div className={`w-10 h-10 rounded-xl ${bg} flex items-center justify-center`}>
                 <Icon className={`w-5 h-5 ${color}`} strokeWidth={1.5} />
               </div>
@@ -186,7 +186,7 @@ export default function CajaView({ movimientosIniciales, pedidosHoy, dict, local
           ))}
 
           {/* Ventas por método */}
-          <div className="bg-white border border-gray-100 rounded-2xl p-4">
+          <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl p-4">
             <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">
               {(dict.metricas as Record<string, string>).ventas_por_metodo}
             </h3>
@@ -224,9 +224,9 @@ export default function CajaView({ movimientosIniciales, pedidosHoy, dict, local
           {showForm && (
             <form
               onSubmit={handleSubmit}
-              className="bg-white border border-gray-100 rounded-2xl p-5 space-y-4 shadow-sm"
+              className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl p-5 space-y-4 shadow-sm"
             >
-              <h3 className="text-sm font-semibold text-gray-900">{t.nuevo_movimiento as string}</h3>
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-white">{t.nuevo_movimiento as string}</h3>
 
               {/* Tipo */}
               <div className="grid grid-cols-2 gap-2">
@@ -325,7 +325,7 @@ export default function CajaView({ movimientosIniciales, pedidosHoy, dict, local
           {/* Historial */}
           <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden">
             <div className="px-5 py-4 border-b border-gray-50">
-              <h3 className="text-sm font-semibold text-gray-900">{t.historial as string}</h3>
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-white">{t.historial as string}</h3>
             </div>
             {movimientos.length === 0 ? (
               <div className="px-5 py-12 text-center text-sm text-gray-400">

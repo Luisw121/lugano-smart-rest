@@ -3,6 +3,7 @@ import { Package, Euro, BarChart3, UtensilsCrossed, QrCode, Users, Clock, Histor
 import { getDictionary, type Locale } from '@/lib/i18n/config'
 import ThemeToggle from '@/components/ui/ThemeToggle'
 import LanguageSelector from '@/components/ui/LanguageSelector'
+import LogoutButton from '@/components/ui/LogoutButton'
 
 export default async function GerenteLayout({
   children,
@@ -53,9 +54,12 @@ export default async function GerenteLayout({
           ))}
         </nav>
 
-        <div className="px-4 py-4 border-t border-gray-100 dark:border-gray-800 flex items-center gap-2">
-          <ThemeToggle />
-          <LanguageSelector currentLocale={locale as Locale} />
+        <div className="px-3 py-4 border-t border-gray-100 dark:border-gray-800 space-y-1">
+          <LogoutButton cookieName="lsr_manager" locale={locale} label="Esci / Torna alla home" />
+          <div className="flex items-center gap-2 px-1 pt-1">
+            <ThemeToggle />
+            <LanguageSelector currentLocale={locale as Locale} />
+          </div>
         </div>
       </aside>
 

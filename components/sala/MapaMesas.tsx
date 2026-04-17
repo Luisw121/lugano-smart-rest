@@ -165,13 +165,13 @@ export default function MapaMesas({
 
   async function confirmarComensales() {
     if (!comensalesDialog) return
-    // Mark table as occupied
-    await supabase.from('mesas').update({ estado: 'ocupada' }).eq('id', comensalesDialog.mesaId)
-    // Create pedido with num_comensales
-    await supabase.from('pedidos').insert({ mesa_id: comensalesDialog.mesaId, estado: 'abierto', num_comensales: comensalesNum })
+    const mesaId = comensalesDialog.mesaId
     setComensalesDialog(null)
-    setMesaActiva(comensalesDialog.mesaId)
+    await supabase.from('mesas').update({ estado: 'ocupada' }).eq('id', mesaId)
+    await supabase.from('pedidos').insert({ mesa_id: mesaId, estado: 'abierto', num_comensales: comensalesNum })
+    // Refresh pedidos FIRST so PedidoPanel opens with the pedido already loaded
     await refreshPedidos()
+    setMesaActiva(mesaId)
   }
 
   const mesaActivaData = mesas.find((m) => m.id === mesaActiva) ?? null

@@ -3,6 +3,7 @@ import { UtensilsCrossed, LayoutGrid, ChefHat } from 'lucide-react'
 import { getDictionary, type Locale } from '@/lib/i18n/config'
 import ThemeToggle from '@/components/ui/ThemeToggle'
 import LanguageSelector from '@/components/ui/LanguageSelector'
+import LogoutButton from '@/components/ui/LogoutButton'
 
 export default async function SalaLayout({
   children,
@@ -49,6 +50,7 @@ export default async function SalaLayout({
           <div className="w-44">
             <LanguageSelector currentLocale={locale as Locale} />
           </div>
+          <LogoutButton cookieName="lsr_sala" locale={locale} label="← Home" />
         </div>
       </header>
 

@@ -32,6 +32,7 @@ const rolLabel: Record<Rol, Record<string, string>> = {
 
 export default function FichajeKiosk({ dict, locale }: Props) {
   const emp = (dict.empleados ?? {}) as Record<string, string>
+  const com = (dict.comun ?? {}) as Record<string, string>
 
   const [pin, setPin] = useState('')
   const [fase, setFase] = useState<Fase>('pin')
@@ -124,7 +125,7 @@ export default function FichajeKiosk({ dict, locale }: Props) {
         </div>
         <div>
           <p className="text-white font-semibold text-sm leading-none">Lugano Smart Rest</p>
-          <p className="text-gray-500 text-xs mt-0.5">{horaActual}</p>
+          <p className="text-gray-500 text-xs mt-0.5" suppressHydrationWarning>{horaActual}</p>
         </div>
       </div>
 
@@ -179,7 +180,7 @@ export default function FichajeKiosk({ dict, locale }: Props) {
               className="mt-5 w-full py-4 bg-white text-gray-900 rounded-2xl text-sm font-semibold
                          hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
             >
-              {loading ? '...' : (emp.confirmar ?? 'Conferma')}
+              {loading ? '...' : (com.confirmar ?? 'Conferma')}
             </button>
           </div>
         )}
@@ -230,7 +231,7 @@ export default function FichajeKiosk({ dict, locale }: Props) {
                 onClick={() => { setFase('pin'); setPin('') }}
                 className="py-3.5 rounded-xl bg-gray-800 text-gray-300 text-sm font-medium hover:bg-gray-700 transition-colors"
               >
-                {emp.cancelar ?? 'Annulla'}
+                {com.cancelar ?? 'Annulla'}
               </button>
               <button
                 onClick={confirmarFichaje}
@@ -241,7 +242,7 @@ export default function FichajeKiosk({ dict, locale }: Props) {
                     : 'bg-red-600 hover:bg-red-500 text-white'
                 }`}
               >
-                {loading ? '...' : (emp.confirmar ?? 'Conferma')}
+                {loading ? '...' : (com.confirmar ?? 'Conferma')}
               </button>
             </div>
           </div>
