@@ -76,9 +76,9 @@ export default function KdsBoard({ pedidosIniciales, productos, dict, locale }: 
       prev.map((p) => ({
         ...p,
         items: ((p.items ?? []) as PedidoItem[]).map((i) =>
-          i.id === itemId ? { ...i, estado: next } : i
+          i.id === itemId ? { ...i, estado: next as PedidoItem['estado'] } : i
         ),
-      }))
+      })) as Pedido[]
     )
   }
 

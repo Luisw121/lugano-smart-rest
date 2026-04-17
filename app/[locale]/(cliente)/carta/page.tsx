@@ -45,9 +45,12 @@ export default async function CartaPage({
 
   return (
     <CartaMenu
-      categorias={categorias ?? []}
-      productos={productos ?? []}
-      alergenos={alergenos ?? []}
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      categorias={(categorias ?? []) as any}
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      productos={(productos ?? []) as any}
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      alergenos={(alergenos ?? []) as any}
       dict={dict}
       locale={locale as Locale}
     />

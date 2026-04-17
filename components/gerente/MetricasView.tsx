@@ -69,7 +69,7 @@ export default function MetricasView({
       const prev = map.get(item.producto_id) ?? { nombre, cantidad: 0, ingresos: 0 }
       map.set(item.producto_id, { nombre, cantidad: prev.cantidad + item.cantidad, ingresos: prev.ingresos })
     })
-    return [...map.values()].sort((a, b) => b.cantidad - a.cantidad).slice(0, 7)
+    return Array.from(map.values()).sort((a, b) => b.cantidad - a.cantidad).slice(0, 7)
   }, [itemsRaw, locale])
   const maxPlato = Math.max(...topPlatos.map((p) => p.cantidad), 1)
 

@@ -67,7 +67,8 @@ export default async function MetricasPage({
     <MetricasView
       pedidosHoy={pedidosHoy ?? []}
       pedidosSemana={pedidosSemana ?? []}
-      itemsRaw={itemsTop ?? []}
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      itemsRaw={(itemsTop ?? []) as any}
       stockAlertas={stockAlertas ?? []}
       ordenesActivas={pedidosActivos?.length ?? 0}
       mesasOcupadas={mesasOcupadas?.length ?? 0}

@@ -45,7 +45,7 @@ export default function QrManager({ mesas }: { mesas: Mesa[] }) {
     a.click()
   }
 
-  const zonas = [...new Set(mesas.map((m) => m.zona))].sort()
+  const zonas = Array.from(new Set(mesas.map((m) => m.zona))).sort()
 
   return (
     <div className="space-y-8">

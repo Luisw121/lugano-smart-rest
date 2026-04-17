@@ -11,7 +11,7 @@ import { createClient } from '@/lib/supabase/client'
 interface Props {
   mesa: Mesa
   pedido: Pedido | null
-  productos: (Producto & { traducciones: ProductoTrad[] })[]}
+  productos: (Producto & { traducciones: ProductoTrad[] })[]
   locale: Locale
   dict: Record<string, Record<string, string | Record<string, string>>>
   onClose: () => void
@@ -32,8 +32,23 @@ const itemEstadoColor: Record<string, string> = {
 }
 
 export default function PedidoPanel({ mesa, pedido, productos, locale, dict, onClose, onUpdated }: Props) {
-  const t = dict.sala as Record<string, Record<string, string>>
-  const tp = t.pedido
+  // Extraemos todos los strings del dict arriba para evitar casteos en JSX
+  const salaRaw = dict.sala as Record<string, unknown>
+  const pedidoRaw = (salaRaw.pedido ?? {}) as Record<string, unknown>
+  const estadoItemLabels = (pedidoRaw.estado_item ?? {}) as Record<string, string>
+  const tp = {
+    tavolo:           String(salaRaw.tavolo           ?? ''),
+    agregar_producto: String(pedidoRaw.agregar_producto ?? ''),
+    sin_pedido:       String(pedidoRaw.sin_pedido       ?? ''),
+    sin_pedido_desc:  String(pedidoRaw.sin_pedido_desc  ?? ''),
+    total:            String(pedidoRaw.total            ?? ''),
+    cerrar_cuenta:    String(pedidoRaw.cerrar_cuenta    ?? ''),
+    metodo_pago:      String(pedidoRaw.metodo_pago      ?? ''),
+    efectivo:         String(pedidoRaw.efectivo         ?? ''),
+    tarjeta:          String(pedidoRaw.tarjeta          ?? ''),
+    otros:            String(pedidoRaw.otros            ?? ''),
+    confirmar_cierre: String(pedidoRaw.confirmar_cierre ?? ''),
+  }
   const tc = dict.comun as Record<string, string>
 
   const [buscador, setBuscador] = useState('')
@@ -125,7 +140,7 @@ export default function PedidoPanel({ mesa, pedido, productos, locale, dict, onC
       {/* Header */}
       <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
         <div>
-          <p className="text-xs text-gray-400 uppercase tracking-wider">{t.tavolo}</p>
+          <p className="text-xs text-gray-400 uppercase tracking-wider">{tp.tavolo}</p>
           <h2 className="text-lg font-bold text-gray-900 leading-tight">{mesa.numero}</h2>
         </div>
         <button
@@ -197,7 +212,7 @@ export default function PedidoPanel({ mesa, pedido, productos, locale, dict, onC
                   <div className="flex items-center gap-1.5 mt-0.5">
                     <EstadoIcon className={`w-3 h-3 ${colorClass}`} strokeWidth={2} />
                     <span className="text-xs text-gray-400">
-                      {(t.pedido.estado_item as Record<string, string>)[item.estado]}
+                      {estadoItemLabels[item.estado]}
                     </span>
                   </div>
                 </div>
