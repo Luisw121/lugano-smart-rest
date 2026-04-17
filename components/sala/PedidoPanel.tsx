@@ -8,10 +8,16 @@ import {
 import type { Mesa, Pedido, PedidoItem, Producto, ProductoTrad, Locale } from '@/types/database'
 import { createClient } from '@/lib/supabase/client'
 
+interface Categoria {
+  id: string; slug: string; orden: number
+  traducciones: { idioma_id: string; nombre: string }[]
+}
+
 interface Props {
   mesa: Mesa
   pedido: Pedido | null
   productos: (Producto & { traducciones: ProductoTrad[] })[]
+  categorias: Categoria[]
   locale: Locale
   dict: Record<string, Record<string, string | Record<string, string>>>
   onClose: () => void
@@ -31,7 +37,12 @@ const itemEstadoColor: Record<string, string> = {
   entregado:      'text-blue-400',
 }
 
-export default function PedidoPanel({ mesa, pedido, productos, locale, dict, onClose, onUpdated }: Props) {
+const CAT_EMOJI: Record<string, string> = {
+  antipasti: '🫒', primi: '🍝', secondi: '🥩',
+  contorni: '🥗', dolci: '🍮', bevande: '🍷',
+}
+
+export default function PedidoPanel({ mesa, pedido, productos, categorias, locale, dict, onClose, onUpdated }: Props) {
   const salaRaw = dict.sala as Record<string, unknown>
   const pedidoRaw = (salaRaw.pedido ?? {}) as Record<string, unknown>
   const estadoItemLabels = (pedidoRaw.estado_item ?? {}) as Record<string, string>
@@ -50,7 +61,7 @@ export default function PedidoPanel({ mesa, pedido, productos, locale, dict, onC
   }
   const tc = dict.comun as Record<string, string>
 
-  const [buscador, setBuscador] = useState('')
+  const [catActiva, setCatActiva] = useState<string | null>(null)
   const [cerrando, setCerrando] = useState(false)
   const [metodoPago, setMetodoPago] = useState<'efectivo' | 'tarjeta' | 'otros'>('efectivo')
   const [loading, setLoading] = useState(false)
@@ -59,10 +70,9 @@ export default function PedidoPanel({ mesa, pedido, productos, locale, dict, onC
 
   const supabase = createClient()
 
-  const productosFiltrados = productos.filter((p) => {
-    const trad = p.traducciones?.find((t) => t.idioma_id === locale) ?? p.traducciones?.[0]
-    return trad?.nombre.toLowerCase().includes(buscador.toLowerCase())
-  })
+  const productosPorCategoria = catActiva
+    ? productos.filter(p => p.categoria_id === catActiva)
+    : []
 
   function nombreProducto(p: Producto & { traducciones: ProductoTrad[] }) {
     return (
@@ -189,41 +199,55 @@ export default function PedidoPanel({ mesa, pedido, productos, locale, dict, onC
         </div>
       </div>
 
-      {/* Buscador de productos */}
-      <div className="px-4 py-3 border-b border-gray-50 dark:border-gray-800">
-        <input
-          type="text"
-          value={buscador}
-          onChange={(e) => setBuscador(e.target.value)}
-          placeholder={tp.agregar_producto}
-          className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl
-                     text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/10
-                     dark:focus:ring-white/10 focus:border-gray-300 dark:focus:border-gray-600 transition-all"
-        />
-      </div>
-
-      {/* Lista productos */}
-      {buscador && (
-        <div className="mx-4 mb-2 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl shadow-lg overflow-hidden z-10 max-h-52 overflow-y-auto">
-          {productosFiltrados.length === 0 ? (
-            <p className="px-4 py-3 text-sm text-gray-400">{tc.sin_datos}</p>
-          ) : (
-            productosFiltrados.map((p) => (
+      {/* Tabs de categorías */}
+      <div className="border-b border-gray-100 dark:border-gray-800">
+        <div className="flex gap-1 px-3 py-2 overflow-x-auto scrollbar-none">
+          {categorias.map(cat => {
+            const nombre = cat.traducciones.find(t => t.idioma_id === locale)?.nombre
+              ?? cat.traducciones.find(t => t.idioma_id === 'it')?.nombre
+              ?? cat.slug
+            const emoji = CAT_EMOJI[cat.slug] ?? '🍴'
+            const activa = catActiva === cat.id
+            return (
               <button
-                key={p.id}
-                onClick={() => { agregarItem(p); setBuscador('') }}
-                className="flex items-center justify-between w-full px-4 py-2.5 text-sm
-                           hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-left"
+                key={cat.id}
+                onClick={() => setCatActiva(activa ? null : cat.id)}
+                className={[
+                  'flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap transition-colors flex-shrink-0',
+                  activa
+                    ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900'
+                    : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700',
+                ].join(' ')}
               >
-                <span className="text-gray-800 dark:text-gray-200 font-medium">{nombreProducto(p)}</span>
-                <span className="text-gray-500 dark:text-gray-400 text-xs ml-2 flex-shrink-0">
-                  CHF {p.precio.toFixed(2)}
-                </span>
+                <span>{emoji}</span> {nombre}
               </button>
-            ))
-          )}
+            )
+          })}
         </div>
-      )}
+
+        {/* Productos de la categoría seleccionada */}
+        {catActiva && (
+          <div className="mx-3 mb-2 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl overflow-hidden max-h-44 overflow-y-auto">
+            {productosPorCategoria.length === 0 ? (
+              <p className="px-4 py-3 text-xs text-gray-400">Nessun piatto disponibile</p>
+            ) : (
+              productosPorCategoria.map(p => (
+                <button
+                  key={p.id}
+                  onClick={() => agregarItem(p)}
+                  className="flex items-center justify-between w-full px-3 py-2.5 text-sm
+                             hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-left border-b border-gray-50 dark:border-gray-700 last:border-0"
+                >
+                  <span className="text-gray-800 dark:text-gray-200 font-medium text-xs leading-tight">{nombreProducto(p)}</span>
+                  <span className="text-gray-500 dark:text-gray-400 text-xs ml-2 flex-shrink-0 font-mono">
+                    {p.precio.toFixed(2)}
+                  </span>
+                </button>
+              ))
+            )}
+          </div>
+        )}
+      </div>
 
       {/* Items del pedido */}
       <div className="flex-1 overflow-y-auto px-4 py-3 space-y-2">

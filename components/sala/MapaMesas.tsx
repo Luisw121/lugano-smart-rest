@@ -7,10 +7,16 @@ import { createClient } from '@/lib/supabase/client'
 import MesaNode from './MesaNode'
 import PedidoPanel from './PedidoPanel'
 
+interface Categoria {
+  id: string; slug: string; orden: number
+  traducciones: { idioma_id: string; nombre: string }[]
+}
+
 interface Props {
   mesasIniciales: Mesa[]
   pedidosIniciales: Pedido[]
   productos: (Producto & { traducciones: ProductoTrad[] })[]
+  categorias: Categoria[]
   dict: Record<string, Record<string, string | Record<string, string>>>
   locale: Locale
 }
@@ -19,6 +25,7 @@ export default function MapaMesas({
   mesasIniciales,
   pedidosIniciales,
   productos,
+  categorias,
   dict,
   locale,
 }: Props) {
@@ -288,6 +295,7 @@ export default function MapaMesas({
           mesa={mesaActivaData}
           pedido={pedidoActivo}
           productos={productos}
+          categorias={categorias}
           locale={locale}
           dict={dict}
           onClose={() => setMesaActiva(null)}

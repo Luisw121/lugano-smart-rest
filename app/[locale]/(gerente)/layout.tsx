@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Package, Euro, BarChart3, UtensilsCrossed, QrCode, Users, Clock, History, ChefHat } from 'lucide-react'
+import { Package, Euro, BarChart3, UtensilsCrossed, QrCode, Users, Clock, History, ChefHat, LayoutGrid } from 'lucide-react'
 import { getDictionary, type Locale } from '@/lib/i18n/config'
 import ThemeToggle from '@/components/ui/ThemeToggle'
 import LanguageSelector from '@/components/ui/LanguageSelector'
@@ -16,14 +16,15 @@ export default async function GerenteLayout({
   const dict = await getDictionary(locale as Locale)
 
   const navItems = [
-    { href: `/${locale}/inventario`, label: dict.nav.inventario, icon: Package },
-    { href: `/${locale}/caja`,       label: dict.nav.cassa,      icon: Euro },
-    { href: `/${locale}/metricas`,   label: dict.nav.metriche,   icon: BarChart3 },
-    { href: `/${locale}/historial`,  label: dict.nav.historial ?? 'Storico', icon: History },
-    { href: `/${locale}/platos`,     label: dict.nav.platos ?? 'Menu',      icon: ChefHat },
-    { href: `/${locale}/empleados`,  label: dict.nav.empleados,  icon: Users },
-    { href: `/${locale}/fichajes`,   label: dict.nav.fichajes,   icon: Clock },
-    { href: `/${locale}/qr`,         label: 'QR Codes',          icon: QrCode },
+    { href: `/${locale}/restaurante`, label: 'Tavoli',                        icon: LayoutGrid },
+    { href: `/${locale}/platos`,      label: dict.nav.platos ?? 'Menu',       icon: ChefHat },
+    { href: `/${locale}/inventario`,  label: dict.nav.inventario,             icon: Package },
+    { href: `/${locale}/caja`,        label: dict.nav.cassa,                  icon: Euro },
+    { href: `/${locale}/metricas`,    label: dict.nav.metriche,               icon: BarChart3 },
+    { href: `/${locale}/historial`,   label: dict.nav.historial ?? 'Storico', icon: History },
+    { href: `/${locale}/empleados`,   label: dict.nav.empleados,              icon: Users },
+    { href: `/${locale}/fichajes`,    label: dict.nav.fichajes,               icon: Clock },
+    { href: `/${locale}/qr`,          label: 'QR Codes',                      icon: QrCode },
   ]
 
   return (

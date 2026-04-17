@@ -15,7 +15,7 @@ export default async function MesasPage({
   const dict = await getDictionary(locale as Locale)
   const supabase = await createClient()
 
-  const [{ data: mesas }, { data: pedidos }, { data: productos }] = await Promise.all([
+  const [{ data: mesas }, { data: pedidos }, { data: productos }, { data: categorias }] = await Promise.all([
     supabase.from('mesas').select('*').eq('activo', true).order('numero'),
     supabase
       .from('pedidos')
@@ -27,6 +27,11 @@ export default async function MesasPage({
       .eq('activo', true)
       .eq('disponible', true)
       .order('precio'),
+    supabase
+      .from('categorias')
+      .select('id, slug, orden, traducciones:categorias_traducciones(idioma_id, nombre)')
+      .eq('activo', true)
+      .order('orden'),
   ])
 
   return (
@@ -34,6 +39,7 @@ export default async function MesasPage({
       mesasIniciales={(mesas ?? []) as Mesa[]}
       pedidosIniciales={(pedidos ?? []) as Pedido[]}
       productos={(productos ?? []) as (Producto & { traducciones: ProductoTrad[] })[]}
+      categorias={categorias ?? []}
       dict={dict}
       locale={locale as Locale}
     />
